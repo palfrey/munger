@@ -7,6 +7,7 @@ from watchdog.events import FileSystemEventHandler
 import os
 import re
 import glob
+import subprocess
 
 last_update = None
 changed = []
@@ -29,10 +30,17 @@ def run_cmd(item, rest, ext, cmd_format, stdin_format=None):
     if not os.path.exists(newpath):
         print("making", newpath)
         cmd = cmd_format.format(item=item, newpath=newpath, rest=rest)
-        print(cmd)
-        ret = os.system(cmd)
+        print("cmd", cmd)
+        if stdin_format == None:
+            stdin = None
+        else:
+            stdin = stdin_format.format(item=item, newpath=newpath, rest=rest)
+            print("stdin", stdin)
+            stdin = open(stdin)
+        ret = subprocess.call(cmd, stdin=stdin, shell=True)
         if ret != 0:
-            os.remove(newpath)
+            if os.path.exists(newpath):
+                os.remove(newpath)
         assert os.path.exists(newpath)
 
 if __name__ == "__main__":
@@ -67,18 +75,23 @@ if __name__ == "__main__":
                         continue
                     rest, ext = os.path.splitext(item)
                     print(item)
-                    run_cmd(item, rest, ".tiff", "convert \"{item}\" \"{newpath}\"")
-                    run_cmd(item, rest, ".hocr", "tesseract \"{item}\" \"{rest}\" -l eng hocr")
-                    run_cmd(item, rest, ".pdf", "hocr2pdf -i \"{item}\" -s -o \"{newpath}\"", stdin_format = "{rest}.pnm")
+                    #run_cmd(item, rest, ".tif", "convert \"{item}\" \"{newpath}\"")
+                    #run_cmd(item, rest, ".pnm.unpaper", "unpaper \"{item}\" \"{newpath}\"")
+                    run_cmd(item, rest, ".tiff", "pamtotiff -output \"{newpath}\" \"{item}\"")
+                    #run_cmd(item, rest, ".hocr", "tesseract \"{rest}.tiff\" \"{rest}\" -l eng hocr")
+                    #run_cmd(item, rest, ".pdf", "hocr2pdf -i \"{rest}.tiff\" -s -o \"{newpath}\"", stdin_format = "{rest}.hocr")
+                    run_cmd(item, rest, ".pdf", "tiff2pdf -o \"{newpath}\" -j -q 95 -p \"A4\" \"{rest}.tiff\"")
                     patt = scan_pattern.search(item)
                     patterns.add(patt.groups()[0])
                 for patt in patterns:
                     prefix = os.path.join(path, patt)
                     items = sorted(glob.glob(prefix + "*.pdf"))
                     print(items)
-                    cmd = "pdftk %s cat output \"%s.joined.pdf\"" % (" ".join(items), prefix)
+                    cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=\"%s.joined.pdf\" %s" % (prefix, " ".join(items))
                     print(cmd)
-                    os.system(cmd)
+                    ret = os.system(cmd)
+                    if ret != 0:
+                        raise Exception
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()

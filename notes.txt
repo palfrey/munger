@@ -1,1 +1,5 @@
-exact-image
+exact-image - hocr2pdf
+unpaper
+brew install gs
+
+https://github.com/yb85/scantailor-advanced-osx
