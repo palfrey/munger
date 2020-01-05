@@ -65,30 +65,31 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    path = sys.argv[1]
+    end_path = sys.argv[1]
+    local_path = sys.argv[2]
 
-    for item in os.listdir(path):
+    for item in os.listdir(local_path):
         if not item.endswith(".pnm"):
             continue
-        fullpath = os.path.join(path,item)
-        stat = os.stat(os.path.join(path,item))
+        fullpath = os.path.join(local_path, item)
+        stat = os.stat(os.path.join(local_path, item))
         when = stat.st_mtime
         if last_update == None or last_update < when:
             last_update = when
         changed.append(fullpath)
     event_handler = UpdateHandler()
     observer = Observer()
-    observer.schedule(event_handler, path, recursive=True)
+    observer.schedule(event_handler, local_path, recursive=True)
     observer.start()
     try:
         scan_pattern = re.compile("(scan_\d+-\d+-\d+-\d+)_\d+.pnm")
         while True:
             time_since = time.time()-last_update
-            print(time_since)
+            print("time since", time_since)
             if time_since > 6:
                 patterns = set()
                 while len(changed) > 0:
-                    item = changed.pop()
+                    item = os.path.abspath(changed.pop())
                     if item[0] == ".":
                         continue
                     rest, ext = os.path.splitext(item)
@@ -96,22 +97,26 @@ if __name__ == "__main__":
                     res = Result.NoChange
                     res = merge_result(res, run_cmd(item, rest, ".tiff", "pamtotiff -output \"{newpath}\" \"{item}\""))
                     if res == Result.Failure:
+                        print("failure in pamtotiff")
                         continue
                     res = merge_result(res, run_cmd(item, rest, ".pdf", "tiff2pdf -o \"{newpath}\" -j -q 95 -p \"A4\" \"{rest}.tiff\""))
                     if res == Result.Failure:
+                        print("failure in tiff2pdf")
                         continue
-                    if res == Result.Change:
-                        patt = scan_pattern.search(item)
-                        patterns.add(patt.groups()[0])
+                    patt = scan_pattern.search(item)
+                    patterns.add(patt.groups()[0])
                 for patt in patterns:
-                    prefix = os.path.join(path, patt)
-                    items = sorted(glob.glob(prefix + "*.pdf"))
-                    print(items)
-                    cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=\"%s.joined.pdf\" %s" % (prefix, " ".join(items))
-                    print(cmd)
-                    ret = os.system(cmd)
-                    if ret != 0:
-                        raise Exception
+                    prefix = os.path.join(end_path, patt)
+                    out_file = "%s.joined.pdf" % prefix
+                    if not os.path.exists(out_file):
+                        local_prefix = os.path.join(local_path, patt)
+                        items = sorted(glob.glob(local_prefix + "*.pdf"))
+                        print(items)
+                        cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=\"%s\" %s" % (out_file, " ".join(items))
+                        print(cmd)
+                        ret = os.system(cmd)
+                        if ret != 0:
+                            raise Exception
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
