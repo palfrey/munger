@@ -1,0 +1,24 @@
+python-pip
+
+sudo SCANBD_DEVICE=epjitsu:libusb:001:006 scanbd -f -d3
+
+https://pypi.org/project/scanpdf/
+awk fix - https://stackoverflow.com/a/7381730/320546
+http://unpaper.berlios.de/
+script for scanpdf https://virantha.com/2014/03/17/one-touch-scanning-with-fujitsu-scansnap-in-linux/
+scanpdf bug https://github.com/virantha/scanpdf/pull/2
+test.script fix https://bugs.launchpad.net/ubuntu/+source/scanbd/+bug/1666659
+cloud scanner https://www.camroncade.com/cloud-scanner-with-raspberry-pi-fujitsu-ix500-2/
+scansnap drivers https://www.josharcher.uk/code/install-scansnap-s1300-drivers-linux/
+ocr in S3 http://howto.philippkeller.com/2018/02/08/Scan-with-raspberry-pi-convert-with-aws-to-searchable-PDF/
+
+https://github.com/palfrey/raspberry-chef
+
+
+apt-get install python3-setuptools python3-pygame python3-pip python3-spidev
+python3 -m pip install evdev
+https://github.com/pigamedrv/pigameui
+https://github.com/pigamedrv/pitft_touchscreen
+https://github.com/pigamedrv/pigame
+https://github.com/adafruit/Adafruit_Userspace_PiTFT
+https://github.com/nift4/Raspberry-Pi-Testing
