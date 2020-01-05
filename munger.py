@@ -67,7 +67,7 @@ if __name__ == "__main__":
         while True:
             time_since = time.time()-last_update
             print(time_since)
-            if time_since > 3:
+            if time_since > 6:
                 patterns = set()
                 while len(changed) > 0:
                     item = changed.pop()
