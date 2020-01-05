@@ -8,6 +8,7 @@ import os
 import re
 import glob
 import subprocess
+import enum
 
 last_update = None
 changed = []
@@ -25,6 +26,19 @@ class UpdateHandler(FileSystemEventHandler):
                 last_update = stat.st_mtime
             changed.append(event.src_path)
 
+class Result(enum.Enum):
+    Change = 1
+    Failure = 2
+    NoChange = 3
+
+def merge_result(existing, new_result):
+    if existing == Result.Failure or new_result == Result.Failure:
+        return Result.Failure
+    elif existing == Result.Change or new_result == Result.Change:
+        return Result.Change
+    else:
+        return Result.NoChange
+
 def run_cmd(item, rest, ext, cmd_format, stdin_format=None):
     newpath = rest + ext
     if not os.path.exists(newpath):
@@ -41,7 +55,11 @@ def run_cmd(item, rest, ext, cmd_format, stdin_format=None):
         if ret != 0:
             if os.path.exists(newpath):
                 os.remove(newpath)
-        assert os.path.exists(newpath)
+        if os.path.exists(newpath):
+            return Result.Change
+        else:
+            return Result.Failure
+    return Result.NoChange
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
@@ -74,15 +92,17 @@ if __name__ == "__main__":
                     if item[0] == ".":
                         continue
                     rest, ext = os.path.splitext(item)
-                    print(item)
-                    #run_cmd(item, rest, ".tif", "convert \"{item}\" \"{newpath}\"")
-                    #run_cmd(item, rest, ".pnm.unpaper", "unpaper \"{item}\" \"{newpath}\"")
-                    run_cmd(item, rest, ".tiff", "pamtotiff -output \"{newpath}\" \"{item}\"")
-                    #run_cmd(item, rest, ".hocr", "tesseract \"{rest}.tiff\" \"{rest}\" -l eng hocr")
-                    #run_cmd(item, rest, ".pdf", "hocr2pdf -i \"{rest}.tiff\" -s -o \"{newpath}\"", stdin_format = "{rest}.hocr")
-                    run_cmd(item, rest, ".pdf", "tiff2pdf -o \"{newpath}\" -j -q 95 -p \"A4\" \"{rest}.tiff\"")
-                    patt = scan_pattern.search(item)
-                    patterns.add(patt.groups()[0])
+                    print("item", item)
+                    res = Result.NoChange
+                    res = merge_result(res, run_cmd(item, rest, ".tiff", "pamtotiff -output \"{newpath}\" \"{item}\""))
+                    if res == Result.Failure:
+                        continue
+                    res = merge_result(res, run_cmd(item, rest, ".pdf", "tiff2pdf -o \"{newpath}\" -j -q 95 -p \"A4\" \"{rest}.tiff\""))
+                    if res == Result.Failure:
+                        continue
+                    if res == Result.Change:
+                        patt = scan_pattern.search(item)
+                        patterns.add(patt.groups()[0])
                 for patt in patterns:
                     prefix = os.path.join(path, patt)
                     items = sorted(glob.glob(prefix + "*.pdf"))
