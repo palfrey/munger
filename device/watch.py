@@ -4,9 +4,10 @@ import os
 import subprocess
 import pygame
 from pygame.locals import *
+import os.path
 
 WHITE = (255,255,255)
-os.putenv('SDL_VIDEODRV','fbcon')
+os.putenv('SDL_VIDEODRV', 'fbcon')
 os.putenv('SDL_FBDEV', '/dev/fb1')
 
 pygame.init()
@@ -28,6 +29,7 @@ def redraw():
     pygame.display.update()
     old_message = message
 
+first_run = True
 process = None
 
 while True:
@@ -43,6 +45,7 @@ while True:
     if dev is None:
         message = ""
         if process != None:
+            first_run = False
             process.terminate()
         time.sleep(2)
         continue
@@ -51,4 +54,11 @@ while True:
         message = "Scanner on"
         process = subprocess.Popen(["/usr/sbin/scanbd", "-f", "-d3"], env={"SCANBD_DEVICE": "epjitsu:libusb:%03d:%03d" % (dev.bus, dev.address)})
     else:
+        scan_status_file = "/tmp/scan-status"
+        if os.path.exists(scan_status_file):
+            message = open(scan_status_file).read().strip()
+        elif first_run:
+            message = "Scanner on"
+        else:
+            message = "Scan ended"
         time.sleep(2)
