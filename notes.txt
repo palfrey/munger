@@ -3,3 +3,6 @@ unpaper
 brew install gs
 
 https://github.com/yb85/scantailor-advanced-osx
+
+pamtotiff - netpbm apt experimental
+tifftopdf - libtiff-tools
