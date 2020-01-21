@@ -20,4 +20,4 @@ ADD pyproject.toml poetry.lock ./
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-interaction --no-ansi
 ADD munger.py ./
-ENTRYPOINT python munger.py
+ENTRYPOINT ["python", "munger.py"]
