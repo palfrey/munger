@@ -1,5 +1,4 @@
 #!/bin/bash
-# Goes in /etc/scanbd/scripts
 
 set -eux -o pipefail
 
@@ -24,19 +23,5 @@ scanimage --resolution 300 \
           --source 'ADF Duplex'
 echo "Output saved in $TMP_DIR/scan*.pnm"
 
-# cd $TMP_DIR
-
-# for i in scan_*.pnm; do  
-#     echo "${i}"
-#     convert "${i}" "${i}.tiff"
-# done
-
-# for i in *.tiff; do
-#     echo "converting file ${i}"
-#     convert "${i}" -white-threshold 90% "processed_${i}"
-#     tiff2pdf -z "processed_${i}" > "processed_${i}.pdf"
-# done
-# pdftk *.tiff.pdf cat output $FILE_NAME.pdf
-# cp $FILE_NAME.pdf $OUT_DIR/
 echo "Copying to server..." > $SCAN_STATUS
 mv $TMP_DIR/*.pnm $OUT_DIR/
