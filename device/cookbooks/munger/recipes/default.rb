@@ -16,3 +16,17 @@ file "/etc/scanbd/scanbd.conf" do
         .gsub("test.script", "scan-script.sh")
     }
 end
+
+require 'yaml'
+
+data = YAML.load(IO.read("/etc/scanner/drive.yaml"), symbolize_names: true)
+
+directory data[:mount][:folder]
+
+replace_or_add "add scanner mount" do
+    path "/etc/fstab"
+    pattern "# scanner mount"
+    line lazy {
+        "%{path}\t%{folder}\t%{fs}\t%{options}\t0\t0 # scanner mount" % data[:mount]
+    }
+end

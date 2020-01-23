@@ -1,0 +1,5 @@
+DEPENDENCIES
+  line (~> 2.6.0)
+
+GRAPH
+  line (2.6.0)

@@ -1,0 +1,5 @@
+mount:
+    path: <some smb path>
+    folder: /mnt/scans
+    fs: cifs
+    options: username=foo,password=bar,file_mode=0664,dir_mode=0775,gid=scanner
