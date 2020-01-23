@@ -31,6 +31,12 @@ replace_or_add "add scanner mount" do
     }
 end
 
+replace_or_add 'spi config' do
+    path '/boot/config.txt'
+    pattern 'dtparam=spi=on'
+    line 'dtparam=spi=on'
+end
+
 ruby_block '/boot/cmdline.txt' do
     block do
         unless File.exist?('/boot/cmdline.txt')
@@ -50,6 +56,10 @@ end
 
 file '/etc/modules-load.d/tft.conf' do
     content 'spi-bcm2835\nfbtft_device'
+end
+
+service 'ssh' do
+    action [:enable, :start]
 end
 
 directory '/opt/munger'
