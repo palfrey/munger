@@ -30,3 +30,24 @@ replace_or_add "add scanner mount" do
         "%{path}\t%{folder}\t%{fs}\t%{options}\t0\t0 # scanner mount" % data[:mount]
     }
 end
+
+ruby_block '/boot/cmdline.txt' do
+    block do
+        unless File.exist?('/boot/cmdline.txt')
+            File.open('/boot/cmdline.txt', 'w') do |f|
+                f.write('rootwait')
+            end
+        end
+        file = Chef::Util::FileEdit.new('/boot/cmdline.txt')
+        file.search_file_replace(/rootwait.*/, "rootwait fbcon=map:10 consoleblank=")
+        file.write_file
+    end
+end
+
+file '/etc/modprobe.d/tft.conf' do
+    content 'options fbtft_device name=pitft rotate=90'
+end
+
+file '/etc/modules-load.d/tft.conf' do
+    content 'spi-bcm2835\nfbtft_device'
+end
