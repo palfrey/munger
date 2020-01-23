@@ -1,5 +1,5 @@
 apt_package ['python3-setuptools', 'python3-pygame', 'python3-pip', 'scanbd']
-execute 'python3 -m pip install evdev spidev'
+execute 'python3 -m pip install evdev spidev pyusb'
 
 directory '/etc/scanbd/scripts'
 
@@ -50,4 +50,10 @@ end
 
 file '/etc/modules-load.d/tft.conf' do
     content 'spi-bcm2835\nfbtft_device'
+end
+
+directory '/opt/munger'
+
+cookbook_file '/opt/munger/watch.py' do
+    source 'watch.py'
 end
