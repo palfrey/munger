@@ -57,3 +57,18 @@ directory '/opt/munger'
 cookbook_file '/opt/munger/watch.py' do
     source 'watch.py'
 end
+
+execute 'systemctl daemon-reload' do
+    command 'systemctl daemon-reload'
+    action :nothing
+end
+
+cookbook_file '/etc/systemd/system/watch.service' do
+    source 'watch.service'
+    notifies :run, 'execute[systemctl daemon-reload]', :immediately
+end
+
+service 'watch' do
+    provider Chef::Provider::Service::Systemd
+    action [:enable, :start]
+end
