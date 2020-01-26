@@ -77,6 +77,7 @@ end
 cookbook_file '/etc/systemd/system/watch.service' do
     source 'watch.service'
     notifies :run, 'execute[systemctl daemon-reload]', :immediately
+    notifies :restart, 'service[watch]'
 end
 
 service 'watch' do
