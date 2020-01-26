@@ -17,18 +17,19 @@ file "/etc/scanbd/scanbd.conf" do
     }
 end
 
-require 'yaml'
+if (File.exist?("/etc/scanner/drive.yaml"))
+    require 'yaml'
+    data = YAML.load(IO.read("/etc/scanner/drive.yaml"), symbolize_names: true)
 
-data = YAML.load(IO.read("/etc/scanner/drive.yaml"), symbolize_names: true)
+    directory data[:mount][:folder]
 
-directory data[:mount][:folder]
-
-replace_or_add "add scanner mount" do
-    path "/etc/fstab"
-    pattern "# scanner mount"
-    line lazy {
-        "%{path}\t%{folder}\t%{fs}\t%{options}\t0\t0 # scanner mount" % data[:mount]
-    }
+    replace_or_add "add scanner mount" do
+        path "/etc/fstab"
+        pattern "# scanner mount"
+        line lazy {
+            "%{path}\t%{folder}\t%{fs}\t%{options}\t0\t0 # scanner mount" % data[:mount]
+        }
+    end
 end
 
 replace_or_add 'spi config' do

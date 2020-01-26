@@ -1,2 +1,3 @@
 ssl_verify_mode :verify_peer
-cookbook_path ['/chef_data/berks-cookbooks', '/chef_data/cookbooks']
+no_lazy_load true
+cookbook_path [Dir.pwd + '/berks-cookbooks/']
