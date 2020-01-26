@@ -1,5 +1,9 @@
 DEPENDENCIES
   line (~> 2.6.0)
+  munger
+    path: cookbooks/munger
 
 GRAPH
   line (2.6.0)
+  munger (0.1.0)
+    line (>= 0.0.0)
