@@ -57,8 +57,8 @@ file '/etc/modprobe.d/tft.conf' do
     content 'options fbtft_device name=pitft rotate=90'
 end
 
-file '/etc/modules-load.d/tft.conf' do
-    content 'spi-bcm2835\nfbtft_device'
+cookbook_file '/etc/modules-load.d/tft.conf' do
+    source 'tft.conf'
 end
 
 service 'ssh' do
