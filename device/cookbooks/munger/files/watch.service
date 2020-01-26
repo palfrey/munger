@@ -11,8 +11,9 @@ Environment=PYTHONUNBUFFERED=1
 # Automatically restart the service if it crashes
 Restart=on-failure
 
-# Use a dedicated user to run our service
-User=scan_user
+# Really we want to use scan_user, but pygame doesn't play nicely without
+# root ("Unable to open a console terminal")
+User=root
 
 [Install]
 # Tell systemd to automatically start this service when the system boots
