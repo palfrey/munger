@@ -3,10 +3,6 @@ execute 'python3 -m pip install evdev spidev pyusb'
 
 directory '/etc/scanbd/scripts'
 
-template '/etc/scanbd/scripts/scan-script.sh' do
-    source 'scan-script.sh'
-end
-
 user 'scan_user'
 
 file "/etc/scanbd/scanbd.conf" do
@@ -17,18 +13,24 @@ file "/etc/scanbd/scanbd.conf" do
     }
 end
 
+directory '/etc/scanner'
+
 if (File.exist?("/etc/scanner/drive.yaml"))
     require 'yaml'
     data = YAML.load(IO.read("/etc/scanner/drive.yaml"), symbolize_names: true)
 
     directory data[:mount][:folder]
 
-    replace_or_add "add scanner mount" do
-        path "/etc/fstab"
-        pattern "# scanner mount"
-        line lazy {
-            "%{path}\t%{folder}\t%{fs}\t%{options}\t0\t0 # scanner mount" % data[:mount]
-        }
+    mount data[:mount][:folder] do
+        device data[:mount][:path]
+        fstype data[:mount][:fs]
+        options data[:mount][:options]
+        action [:mount, :enable]
+    end
+
+    template '/etc/scanbd/scripts/scan-script.sh' do
+        source 'scan-script.sh'
+        variables(out_dir: data[:mount][:folder])
     end
 end
 

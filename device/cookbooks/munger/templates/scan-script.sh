@@ -11,7 +11,7 @@ trap finish EXIT
 
 echo "Scanning..." > $SCAN_STATUS
 
-OUT_DIR=/mnt/smb/src/munger/scans
+OUT_DIR=<%= @out_dir %>
 TMP_DIR=`mktemp -d`
 FILE_NAME=scan_`date +%Y-%m-%d-%H%M%S`
 
