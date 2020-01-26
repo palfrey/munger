@@ -5,6 +5,17 @@ import subprocess
 import pygame
 from pygame.locals import *
 import os.path
+import signal
+import logging
+
+# Skip these to workaround https://github.com/pygame/pygame/issues/342
+def handler(signum, frame):
+  """Why is systemd sending sighups? I DON'T KNOW."""
+  logging.warning("Got a {} signal. Doing nothing".format(signum))
+
+signal.signal(signal.SIGHUP, handler)
+signal.signal(signal.SIGTERM, handler)
+signal.signal(signal.SIGCONT, handler)
 
 WHITE = (255,255,255)
 os.putenv('SDL_VIDEODRV', 'fbcon')
