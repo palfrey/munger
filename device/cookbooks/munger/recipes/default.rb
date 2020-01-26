@@ -19,9 +19,9 @@ if (File.exist?("/etc/scanner/drive.yaml"))
     require 'yaml'
     data = YAML.load(IO.read("/etc/scanner/drive.yaml"), symbolize_names: true)
 
-    directory data[:mount][:folder]
+    directory data[:mount][:mount_folder]
 
-    mount data[:mount][:folder] do
+    mount data[:mount][:mount_folder] do
         device data[:mount][:path]
         fstype data[:mount][:fs]
         options data[:mount][:options]
@@ -30,7 +30,7 @@ if (File.exist?("/etc/scanner/drive.yaml"))
 
     template '/etc/scanbd/scripts/scan-script.sh' do
         source 'scan-script.sh'
-        variables(out_dir: data[:mount][:folder])
+        variables(out_dir: data[:mount][:mount_folder] + data[:mount][:scans_folder])
     end
 end
 
