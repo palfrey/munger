@@ -5,16 +5,19 @@ services: docker
 jobs:
     fast_finish: true
     include:
-        - cache: bundler
+        - name: "device"
+          cache: bundler
           before_install:
+            - gem update --system # Fix https://github.com/rubygems/rubygems/pull/2780
             - gem install bundler
-          install: cd device && bundle install
+          install: cd device && bundle install && cd ..
           # https://github.com/zuazo/kitchen-in-travis-native/issues/1#issuecomment-142455888
           before_script: sudo iptables -L DOCKER || sudo iptables -N DOCKER
           script:
             - cd device
             - bundle exec foodcritic cookbooks/munger
             - bundle exec kitchen verify
-        - script:
+        - name: "server"
+          script:
             - cd server
             - docker build .
