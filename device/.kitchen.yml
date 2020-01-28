@@ -1,0 +1,31 @@
+# See https://github.com/test-kitchen/kitchen-docker/issues/336#issuecomment-501236895
+---
+    driver_plugin: docker
+    driver_config:
+      cap_add:
+        - SYS_ADMIN
+      eflags: container=docker
+      require_chef_omnibus: 13.12.14
+      run_command: /sbin/init
+      run_options:
+        env: container=docker
+      volume:
+        - /sys/fs/cgroup:/sys/fs/cgroup
+      provision_command:
+        - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+        - systemctl enable ssh.service
+        - mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
+        - mkdir -p /lib/modules/`uname -r`/
+        - ln -s /usr/src/linux-headers-4.19.0-6-amd64/ /lib/modules/`uname -r`/build
+
+    provisioner:
+      chef_license: accept
+    
+    platforms:
+      - name: debian-buster
+    
+    suites:
+      - name: default
+        run_list:
+          - recipe[munger]
+        attributes: {}

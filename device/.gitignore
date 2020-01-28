@@ -2,3 +2,5 @@ nodes/
 local-mode-cache/
 drive.yaml
 berks-cookbooks/
+vendor/
+.kitchen/

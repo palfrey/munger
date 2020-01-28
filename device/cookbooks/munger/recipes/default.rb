@@ -53,6 +53,8 @@ ruby_block '/boot/cmdline.txt' do
     end
 end
 
+apt_package 'kmod'
+
 file '/etc/modprobe.d/tft.conf' do
     content 'options fbtft_device name=pitft rotate=90'
 end
