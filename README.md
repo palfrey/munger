@@ -1,5 +1,6 @@
 munger
 ======
+[![Build Status](https://travis-ci.com/palfrey/munger.svg?branch=master)](https://travis-ci.com/palfrey/munger)
 
 Scan-to-cloud for local scanners.
 

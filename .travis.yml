@@ -1,0 +1,21 @@
+rvm: 2.6
+
+sudo: required
+services: docker
+cache: bundler
+
+install: cd device && bundle install
+
+# https://github.com/zuazo/kitchen-in-travis-native/issues/1#issuecomment-142455888
+before_script: sudo iptables -L DOCKER || sudo iptables -N DOCKER
+
+jobs:
+    fast_finish: true
+    include:
+        - script:
+            - cd device
+            - bundle exec foodcritic cookbooks/munger
+            - bundle exec kitchen verify
+        - script:
+            - cd server
+            - docker build .
