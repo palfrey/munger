@@ -10,7 +10,7 @@ import glob
 import subprocess
 import enum
 
-last_update = None
+last_update = time.mktime(time.gmtime(0))
 changed = []
 
 class UpdateHandler(FileSystemEventHandler):
