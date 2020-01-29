@@ -6,7 +6,9 @@ jobs:
     fast_finish: true
     include:
         - name: "device"
-          cache: bundler
+          cache:
+            directories:
+              - $HOME/.rvm/
           before_install:
             - gem update --system # Fix https://github.com/rubygems/rubygems/pull/2780
             - gem install bundler
