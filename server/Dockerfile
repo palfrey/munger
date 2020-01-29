@@ -1,10 +1,11 @@
 FROM python:3-alpine
 WORKDIR /app
 
-RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev tiff-tools
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev tiff-tools ghostscript
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ netpbm
 RUN pamtotiff
 RUN tiff2pdf -h > /dev/null
+RUN gs --version
 
 ENV PYTHONFAULTHANDLER=1 \
   PYTHONUNBUFFERED=1 \
