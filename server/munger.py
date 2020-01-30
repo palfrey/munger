@@ -74,7 +74,7 @@ if __name__ == "__main__":
         fullpath = os.path.join(local_path, item)
         stat = os.stat(os.path.join(local_path, item))
         when = stat.st_mtime
-        if last_update == None or last_update < when:
+        if last_update < when:
             last_update = when
         changed.append(fullpath)
     event_handler = UpdateHandler()
