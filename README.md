@@ -8,6 +8,8 @@ This is based on the [Fujitsu ScanSnap S1300i](https://www.fujitsu.com/uk/produc
 
 Munger enables the use of a Raspberry Pi for scan-to-cloud, along with a convertor component for running elsewhere if you've got an older slower Pi that can't really do the conversion stuff.
 
+![full setup](images/full%20setup.jpg)
+
 Install steps
 --------------
 1. Acquire a Pi (I'm using an original Model B, so probably anything except the Pi Zero will work for this), a screen (I've got a cheap knockoff of the [AdaFruit 2.8" 320x240 TFT](https://www.adafruit.com/product/1601)), and a USB scanner ([Fujitsu ScanSnap S1300i](https://www.fujitsu.com/uk/products/computing/peripheral/scanners/scansnap/s1300i/) is what I've got, but anything that's compatible with [SANE](http://www.sane-project.org/) and [scanbd](https://wiki.archlinux.org/index.php/Scanner_Button_Daemon) should work)
@@ -21,6 +23,18 @@ Install steps
 
 4. At this point you should be able to open up your scanner and see "Scanner on" display, and then push the physical "scan" button and get the scanner to scan images to the folder you configured in `drive.yaml`
 
-5. servers
-docker build -t munger .
-docker run --rm -v `pwd`/../scans:/scans -v ~/Dropbox/shared/scans/unsorted:/output munger /output /scans
+5. You now need another machine (or in theory the Pi itself could do this, but it's really slow on the Pi 1 I'm using, so mostly untested recently). Checkout a copy of this repo there.
+
+6. Build the server docker image `docker build -t munger server`
+
+7. Run it, replacing `<scans folder>` with a path to the `scans folder` from step 3, and `<output folder>` to wherever the end files go (I suggest a local Dropbox folder or similar) `docker run --rm -v <scans folder>:/scans -v <output folder>:/output munger /output /scans`
+
+At this point, when you do a scan it should go through the following steps:
+
+1. Open the scanner and insert the pages
+![scanner on](images/scanner%20on.jpg)
+2. Push the scan button
+![scanning](images/scanning.jpg)
+3. Wait for it to finish scanning and uploading
+![copying](images/copying.jpg)
+4. Wait for the server side work to make the PDF

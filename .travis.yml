@@ -21,5 +21,4 @@ jobs:
             - bundle exec kitchen verify
         - name: "server"
           script:
-            - cd server
-            - docker build .
+            - docker build server
