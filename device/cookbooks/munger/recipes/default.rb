@@ -81,9 +81,16 @@ service 'watch' do
 end
 
 # https://www.josharcher.uk/code/install-scansnap-s1300-drivers-linux/
-mkdir -p /usr/share/sane/epjitsu
-https://www.josharcher.uk/static/files/2016/10/1300i_0D12.nal
-/usr/share/sane/epjitsu/1300i_0C26.nal
+directory '/usr/share/sane/epjitsu' do
+    recursive true
+end
 
-systemctl stop scanbd
-systemctl mask scanbd
+remote_file '/usr/share/sane/epjitsu/1300i_0C26.nal' do
+    source 'https://www.josharcher.uk/static/files/2016/10/1300i_0D12.nal'
+end
+
+# Because watch will invoke this, and it's buggy otherwise
+service 'scanbd' do
+    provider Chef::Provider::Service::Systemd
+    action [:disable, :stop]
+end
