@@ -3,16 +3,6 @@ execute 'python3 -m pip install evdev spidev pyusb'
 
 directory '/etc/scanbd/scripts'
 
-user 'scan_user'
-
-file "/etc/scanbd/scanbd.conf" do
-    content lazy {
-        IO.read("/etc/scanbd/scanbd.conf")
-        .gsub(/[ \t]{2,}user\s+= ([^\s]+)/, "user = scan_user")
-        .gsub("test.script", "scan-script.sh")
-    }
-end
-
 directory '/etc/scanner'
 
 if (File.exist?("/etc/scanner/drive.yaml"))
@@ -30,6 +20,7 @@ if (File.exist?("/etc/scanner/drive.yaml"))
 
     template '/etc/scanbd/scripts/scan-script.sh' do
         source 'scan-script.sh'
+        mode '0755'
         variables(out_dir: data[:mount][:mount_folder] + data[:mount][:scans_folder])
     end
 end
@@ -88,3 +79,11 @@ service 'watch' do
     provider Chef::Provider::Service::Systemd
     action [:enable, :start]
 end
+
+# https://www.josharcher.uk/code/install-scansnap-s1300-drivers-linux/
+mkdir -p /usr/share/sane/epjitsu
+https://www.josharcher.uk/static/files/2016/10/1300i_0D12.nal
+/usr/share/sane/epjitsu/1300i_0C26.nal
+
+systemctl stop scanbd
+systemctl mask scanbd

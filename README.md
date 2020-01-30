@@ -20,3 +20,7 @@ Install steps
 3. Download `https://raw.githubusercontent.com/palfrey/munger/master/device/drive.yaml.example` to `/etc/scanner/drive.yaml` on the Pi and edit it to your local settings. In the example config, I've got another checkout of munger on the server in `src/munger` and we're dumping the scans under that. `mount_folder` is the actual folder to mount and `scans_folder` is a subfolder of that to store things in. When the raspberry-chef updater runs again, you should now have a mounted folder.
 
 4. At this point you should be able to open up your scanner and see "Scanner on" display, and then push the physical "scan" button and get the scanner to scan images to the folder you configured in `drive.yaml`
+
+5. servers
+docker build -t munger .
+docker run --rm -v `pwd`/../scans:/scans -v ~/Dropbox/shared/scans/unsorted:/output munger /output /scans

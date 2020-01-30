@@ -14,7 +14,6 @@ def handler(signum, frame):
   logging.warning("Got a {} signal. Doing nothing".format(signum))
 
 signal.signal(signal.SIGHUP, handler)
-signal.signal(signal.SIGTERM, handler)
 signal.signal(signal.SIGCONT, handler)
 
 WHITE = (255,255,255)
