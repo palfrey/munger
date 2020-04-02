@@ -9,6 +9,7 @@ import re
 import glob
 import subprocess
 import enum
+import json
 
 last_update = time.mktime(time.gmtime(0))
 changed = []
@@ -87,13 +88,24 @@ if __name__ == "__main__":
             time_since = time.time()-last_update
             print("time since", time_since)
             if time_since > 6:
+                done_fname = os.path.join(end_path, "done.json")
+                try:
+                    done = json.load(open(done_fname))
+                except Exception:
+                    print("Can't load done", done_fname)
+                    done = []
+
                 patterns = set()
                 while len(changed) > 0:
                     item = os.path.abspath(changed.pop())
                     if item[0] == ".":
                         continue
                     rest, ext = os.path.splitext(item)
-                    print("item", item)
+                    patt = scan_pattern.search(item).groups()[0]
+                    if patt in done:
+                        print("Skipping", patt)
+                        continue
+                    print("item", item, patt)
                     res = Result.NoChange
                     res = merge_result(res, run_cmd(item, rest, ".tiff", "pamtotiff -output \"{newpath}\" \"{item}\""))
                     if res == Result.Failure:
@@ -103,8 +115,7 @@ if __name__ == "__main__":
                     if res == Result.Failure:
                         print("failure in tiff2pdf")
                         continue
-                    patt = scan_pattern.search(item)
-                    patterns.add(patt.groups()[0])
+                    patterns.add(patt)
                 for patt in patterns:
                     prefix = os.path.join(end_path, patt)
                     out_file = "%s.joined.pdf" % prefix
@@ -117,6 +128,8 @@ if __name__ == "__main__":
                         ret = os.system(cmd)
                         if ret != 0:
                             raise Exception
+                    done.append(patt)
+                    json.dump(done, open(done_fname, "w"))
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
