@@ -1,0 +1,25 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  device:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6 # Not needed with a .ruby-version file
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+        working-directory: device
+    - run: |
+        cd device
+        bundle exec foodcritic cookbooks/munger
+        bundle exec kitchen verify
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build
+        uses: docker/build-push-action@v2
+        with:
+          context: server
