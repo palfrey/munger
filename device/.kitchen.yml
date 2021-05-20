@@ -9,6 +9,8 @@
       run_command: /sbin/init
       run_options:
         env: container=docker
+      forward:
+      - 22:2222        
       volume:
         - /sys/fs/cgroup:/sys/fs/cgroup
       provision_command:
