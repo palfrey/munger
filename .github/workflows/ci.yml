@@ -16,7 +16,7 @@ jobs:
         bundle exec kitchen verify
       continue-on-error: true
     - run: docker ps -a
-    - run: docker logs $(docker ps -q)
+    - run: docker ps -q | xargs -n 1 docker logs
   server:
     runs-on: ubuntu-latest
     steps:
