@@ -1,0 +1,22 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  device:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+        bundler-cache: true
+        working-directory: device
+    - run: |
+        cd device
+        bundle exec foodcritic cookbooks/munger
+        # Disabled because docker stuff isn't working currently on more recent versions
+        # bundle exec kitchen verify
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build server
