@@ -13,8 +13,7 @@ jobs:
     - run: |
         cd device
         bundle exec foodcritic cookbooks/munger
-        # Disabled because docker stuff isn't working currently on more recent versions
-        # bundle exec kitchen verify
+        bundle exec kitchen verify
   server:
     runs-on: ubuntu-latest
     steps:

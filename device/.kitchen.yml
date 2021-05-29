@@ -17,6 +17,9 @@
         - mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
         - mkdir -p /lib/modules/`uname -r`/
         - ln -s /usr/src/linux-headers-4.19.0-6-amd64/ /lib/modules/`uname -r`/build
+      tmpfs:
+        - /run
+        - /run/lock        
 
     provisioner:
       chef_license: accept
