@@ -9,5 +9,5 @@ group :integration do
 end
 
 group :docker do
-  gem 'kitchen-docker', '~> 2.4'
+  gem 'kitchen-docker', git: 'https://github.com/test-kitchen/kitchen-docker', ref: 'b45c4858bef19f22a32096e44777bff097f35dd8' # Needed for https://github.com/test-kitchen/kitchen-docker/pull/372
 end

@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/test-kitchen/kitchen-docker
+  revision: b45c4858bef19f22a32096e44777bff097f35dd8
+  ref: b45c4858bef19f22a32096e44777bff097f35dd8
+  specs:
+    kitchen-docker (2.10.0)
+      test-kitchen (>= 1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -121,8 +129,6 @@ GEM
     ipaddress (0.8.3)
     iso8601 (0.12.1)
     json (2.3.0)
-    kitchen-docker (2.9.0)
-      test-kitchen (>= 1.0.0)
     libyajl2 (1.2.0)
     license-acceptance (1.0.13)
       pastel (~> 0.7)
@@ -327,8 +333,8 @@ DEPENDENCIES
   berkshelf (~> 4.0)
   chef (~> 13.12.14)
   foodcritic
-  kitchen-docker (~> 2.4)
+  kitchen-docker!
   test-kitchen (~> 2.3)
 
 BUNDLED WITH
-   2.1.2
+   2.2.17
