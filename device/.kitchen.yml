@@ -16,7 +16,7 @@
         - systemctl enable ssh.service
         - mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
         - mkdir -p /lib/modules/`uname -r`/
-        - ln -s /usr/src/linux-headers-4.19.0-6-amd64/ /lib/modules/`uname -r`/build
+        - ln -s /usr/src/linux-headers-4.19.0-16-amd64/ /lib/modules/`uname -r`/build
       tmpfs:
         - /run
         - /run/lock        
@@ -26,6 +26,8 @@
     
     platforms:
       - name: debian-buster
+        driver_config:
+          image: debian:buster-20191224
     
     suites:
       - name: default
