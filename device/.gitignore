@@ -4,3 +4,4 @@ drive.yaml
 berks-cookbooks/
 vendor/
 .kitchen/
+.bundle

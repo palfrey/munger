@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 gem "chef", '~> 13.12.14'
 
 gem 'berkshelf', '~> 4.0'
+gem 'hashie', '<3.5' # to get rid of logging issues
+gem 'ffi-libarchive' # workaround for https://github.com/sous-chefs/line/issues/92
 
 group :integration do
   gem 'test-kitchen', '~> 2.3'
@@ -9,5 +11,5 @@ group :integration do
 end
 
 group :docker do
-  gem 'kitchen-docker', '~> 2.4'
+  gem 'kitchen-docker', git: 'https://github.com/test-kitchen/kitchen-docker', ref: 'b45c4858bef19f22a32096e44777bff097f35dd8' # Needed for https://github.com/test-kitchen/kitchen-docker/pull/372
 end
