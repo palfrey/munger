@@ -3,6 +3,7 @@ gem "chef", '~> 13.12.14'
 
 gem 'berkshelf', '~> 4.0'
 gem 'hashie', '<3.5' # to get rid of logging issues
+gem 'ffi-libarchive' # workaround for https://github.com/sous-chefs/line/issues/92
 
 group :integration do
   gem 'test-kitchen', '~> 2.3'
