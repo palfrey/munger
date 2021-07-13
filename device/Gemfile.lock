@@ -9,7 +9,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.7.0)
+    addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     backports (3.15.0)
     bcrypt_pbkdf (1.0.1)
@@ -197,7 +197,7 @@ GEM
     plist (3.5.0)
     polyglot (0.3.5)
     proxifier (1.0.3)
-    public_suffix (4.0.3)
+    public_suffix (4.0.6)
     racc (1.5.2)
     rack (2.2.3)
     rake (13.0.1)
