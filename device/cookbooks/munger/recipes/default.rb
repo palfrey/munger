@@ -87,6 +87,7 @@ end
 
 remote_file '/usr/share/sane/epjitsu/1300i_0C26.nal' do
     source 'https://www.josharcher.uk/static/files/2016/10/1300i_0D12.nal'
+    ssl_verify_mode :verify_none
 end
 
 # Because watch will invoke this, and it's buggy otherwise
