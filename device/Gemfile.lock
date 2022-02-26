@@ -9,7 +9,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.7.0)
+    addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     backports (3.15.0)
     bcrypt_pbkdf (1.0.1)
@@ -141,7 +141,7 @@ GEM
     logging (2.2.2)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    mini_portile2 (2.5.1)
+    mini_portile2 (2.6.1)
     minitar (0.9)
     mixlib-archive (0.4.20)
       mixlib-log
@@ -172,8 +172,8 @@ GEM
       net-ssh-gateway (>= 1.2.0)
     net-telnet (0.1.1)
     nio4r (2.5.2)
-    nokogiri (1.11.5)
-      mini_portile2 (~> 2.5.0)
+    nokogiri (1.12.5)
+      mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     nori (2.6.0)
     octokit (4.15.0)
@@ -197,7 +197,7 @@ GEM
     plist (3.5.0)
     polyglot (0.3.5)
     proxifier (1.0.3)
-    public_suffix (4.0.3)
+    public_suffix (4.0.6)
     racc (1.5.2)
     rack (2.2.3)
     rake (13.0.1)
