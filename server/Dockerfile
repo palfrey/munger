@@ -1,8 +1,8 @@
-FROM python:3-alpine
+FROM python:3.9.16-alpine3.16
 WORKDIR /app
 
 RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev tiff-tools ghostscript
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ netpbm
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ netpbm
 RUN pamtotiff
 RUN tiff2pdf -h > /dev/null
 RUN gs --version
