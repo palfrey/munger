@@ -1,8 +1,7 @@
-FROM python:3.9.16-alpine3.16
+FROM python:3.9.16-alpine3.17
 WORKDIR /app
 
-RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev tiff-tools ghostscript
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ netpbm
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev tiff-tools ghostscript netpbm
 RUN pamtotiff
 RUN tiff2pdf -h > /dev/null
 RUN gs --version
@@ -15,7 +14,7 @@ ENV PYTHONFAULTHANDLER=1 \
   PIP_DEFAULT_TIMEOUT=100 \
   POETRY_VERSION=1.0.0
 
-RUN pip install poetry==$POETRY_VERSION "cryptography<3"
+RUN pip install poetry==$POETRY_VERSION
 
 ADD pyproject.toml poetry.lock ./
 RUN poetry config virtualenvs.create false
